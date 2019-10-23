@@ -3,6 +3,7 @@ package teamserver
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -75,7 +76,7 @@ func (srv *Server) handleTaskExecuted(w http.ResponseWriter, r *http.Request) {
 		ctx := context.Background()
 		err = srv.taskExecuted(ctx, event)
 		if err != nil {
-			http.Error(w, "an error occured in updating the executed task", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("error updating task for executed event: %v with event: %+v", err, event), http.StatusInternalServerError)
 			return
 		}
 		return
