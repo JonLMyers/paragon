@@ -56,18 +56,20 @@ func (srv *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 
 // Run begins the handlers for processing the subscriptions to the `tasks.claimed` and `tasks.executed` topics
 func (srv *Server) Run() {
-	http.HandleFunc("/status", srv.handleStatus)
+	router := http.NewServeMux()
+	router.HandleFunc("/status", srv.handleStatus)
 
-	http.HandleFunc("/events/agent/checkin", srv.handleAgentCheckin)
-	http.HandleFunc("/events/tasks/claimed", srv.handleTaskClaimed)
-	http.HandleFunc("/events/tasks/executed", srv.handleTaskExecuted)
+	router.HandleFunc("/events/agent/checkin", srv.handleAgentCheckin)
+	router.HandleFunc("/events/tasks/claimed", srv.handleTaskClaimed)
+	router.HandleFunc("/events/tasks/executed", srv.handleTaskExecuted)
 
-	http.HandleFunc("/makeTask", srv.handleMakeTask)
-	http.HandleFunc("/getTask", srv.handleGetTask)
-	http.HandleFunc("/getTarget", srv.handleGetTarget)
-	http.HandleFunc("/listTargets", srv.handleListTargets)
-	http.HandleFunc("/listTasksForTarget", srv.handleListTasksForTarget)
-	if err := http.ListenAndServe("0.0.0.0:80", nil); err != nil {
+	router.HandleFunc("/makeTask", srv.handleMakeTask)
+	router.HandleFunc("/getTask", srv.handleGetTask)
+	router.HandleFunc("/getTarget", srv.handleGetTarget)
+	router.HandleFunc("/listTargets", srv.handleListTargets)
+	router.HandleFunc("/listTasksForTarget", srv.handleListTasksForTarget)
+	handler := withLogging(srv.Log.Named("http"), router)
+	if err := http.ListenAndServe("0.0.0.0:80", handler); err != nil {
 		panic(err)
 	}
 }

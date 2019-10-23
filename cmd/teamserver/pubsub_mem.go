@@ -14,8 +14,3 @@ func openTopic(ctx context.Context, topic string) (*pubsub.Topic, error) {
 	uri := fmt.Sprintf("mem://%s", topic)
 	return pubsub.OpenTopic(ctx, uri)
 }
-
-func openSubscription(ctx context.Context, topic string) (*pubsub.Subscription, error) {
-	uri := fmt.Sprintf("mem://%s", topic)
-	return pubsub.OpenSubscription(ctx, uri)
-}

@@ -2,6 +2,8 @@ package teamserver
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -79,6 +81,7 @@ func (srv *Server) queueTask(ctx context.Context, task *ent.Task) error {
 		Content: task.Content,
 		Filter:  &agentMetadata,
 	}
+	fmt.Fprintf(os.Stderr, "%+v\n", event)
 	body, err := proto.Marshal(&event)
 	if err != nil {
 		return err
