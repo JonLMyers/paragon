@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/predicate"
@@ -27,7 +26,8 @@ type TargetUpdate struct {
 	clearPrimaryMAC bool
 	Hostname        *string
 	clearHostname   bool
-	LastSeen        *time.Time
+	LastSeen        *int64
+	addLastSeen     *int64
 	clearLastSeen   bool
 	tasks           map[int]struct{}
 	removedTasks    map[int]struct{}
@@ -152,15 +152,26 @@ func (tu *TargetUpdate) ClearHostname() *TargetUpdate {
 }
 
 // SetLastSeen sets the LastSeen field.
-func (tu *TargetUpdate) SetLastSeen(t time.Time) *TargetUpdate {
-	tu.LastSeen = &t
+func (tu *TargetUpdate) SetLastSeen(i int64) *TargetUpdate {
+	tu.LastSeen = &i
+	tu.addLastSeen = nil
 	return tu
 }
 
 // SetNillableLastSeen sets the LastSeen field if the given value is not nil.
-func (tu *TargetUpdate) SetNillableLastSeen(t *time.Time) *TargetUpdate {
-	if t != nil {
-		tu.SetLastSeen(*t)
+func (tu *TargetUpdate) SetNillableLastSeen(i *int64) *TargetUpdate {
+	if i != nil {
+		tu.SetLastSeen(*i)
+	}
+	return tu
+}
+
+// AddLastSeen adds i to LastSeen.
+func (tu *TargetUpdate) AddLastSeen(i int64) *TargetUpdate {
+	if tu.addLastSeen == nil {
+		tu.addLastSeen = &i
+	} else {
+		*tu.addLastSeen += i
 	}
 	return tu
 }
@@ -306,6 +317,9 @@ func (tu *TargetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value := tu.LastSeen; value != nil {
 		builder.Set(target.FieldLastSeen, *value)
 	}
+	if value := tu.addLastSeen; value != nil {
+		builder.Add(target.FieldLastSeen, *value)
+	}
 	if tu.clearLastSeen {
 		builder.SetNull(target.FieldLastSeen)
 	}
@@ -372,7 +386,8 @@ type TargetUpdateOne struct {
 	clearPrimaryMAC bool
 	Hostname        *string
 	clearHostname   bool
-	LastSeen        *time.Time
+	LastSeen        *int64
+	addLastSeen     *int64
 	clearLastSeen   bool
 	tasks           map[int]struct{}
 	removedTasks    map[int]struct{}
@@ -490,15 +505,26 @@ func (tuo *TargetUpdateOne) ClearHostname() *TargetUpdateOne {
 }
 
 // SetLastSeen sets the LastSeen field.
-func (tuo *TargetUpdateOne) SetLastSeen(t time.Time) *TargetUpdateOne {
-	tuo.LastSeen = &t
+func (tuo *TargetUpdateOne) SetLastSeen(i int64) *TargetUpdateOne {
+	tuo.LastSeen = &i
+	tuo.addLastSeen = nil
 	return tuo
 }
 
 // SetNillableLastSeen sets the LastSeen field if the given value is not nil.
-func (tuo *TargetUpdateOne) SetNillableLastSeen(t *time.Time) *TargetUpdateOne {
-	if t != nil {
-		tuo.SetLastSeen(*t)
+func (tuo *TargetUpdateOne) SetNillableLastSeen(i *int64) *TargetUpdateOne {
+	if i != nil {
+		tuo.SetLastSeen(*i)
+	}
+	return tuo
+}
+
+// AddLastSeen adds i to LastSeen.
+func (tuo *TargetUpdateOne) AddLastSeen(i int64) *TargetUpdateOne {
+	if tuo.addLastSeen == nil {
+		tuo.addLastSeen = &i
+	} else {
+		*tuo.addLastSeen += i
 	}
 	return tuo
 }
@@ -664,8 +690,12 @@ func (tuo *TargetUpdateOne) sqlSave(ctx context.Context) (t *Target, err error) 
 		builder.Set(target.FieldLastSeen, *value)
 		t.LastSeen = *value
 	}
+	if value := tuo.addLastSeen; value != nil {
+		builder.Add(target.FieldLastSeen, *value)
+		t.LastSeen += *value
+	}
 	if tuo.clearLastSeen {
-		var value time.Time
+		var value int64
 		t.LastSeen = value
 		builder.SetNull(target.FieldLastSeen)
 	}

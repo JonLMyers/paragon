@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 )
@@ -17,13 +16,13 @@ type Task struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// QueueTime holds the value of the "QueueTime" field.
-	QueueTime time.Time `json:"QueueTime,omitempty"`
+	QueueTime int64 `json:"QueueTime,omitempty"`
 	// ClaimTime holds the value of the "ClaimTime" field.
-	ClaimTime time.Time `json:"ClaimTime,omitempty"`
+	ClaimTime int64 `json:"ClaimTime,omitempty"`
 	// ExecStartTime holds the value of the "ExecStartTime" field.
-	ExecStartTime time.Time `json:"ExecStartTime,omitempty"`
+	ExecStartTime int64 `json:"ExecStartTime,omitempty"`
 	// ExecStopTime holds the value of the "ExecStopTime" field.
-	ExecStopTime time.Time `json:"ExecStopTime,omitempty"`
+	ExecStopTime int64 `json:"ExecStopTime,omitempty"`
 	// Content holds the value of the "Content" field.
 	Content string `json:"Content,omitempty"`
 	// Output holds the value of the "Output" field.
@@ -38,10 +37,10 @@ type Task struct {
 func (t *Task) FromRows(rows *sql.Rows) error {
 	var vt struct {
 		ID            int
-		QueueTime     sql.NullTime
-		ClaimTime     sql.NullTime
-		ExecStartTime sql.NullTime
-		ExecStopTime  sql.NullTime
+		QueueTime     sql.NullInt64
+		ClaimTime     sql.NullInt64
+		ExecStartTime sql.NullInt64
+		ExecStopTime  sql.NullInt64
 		Content       sql.NullString
 		Output        []byte
 		Error         sql.NullString
@@ -62,10 +61,10 @@ func (t *Task) FromRows(rows *sql.Rows) error {
 		return err
 	}
 	t.ID = vt.ID
-	t.QueueTime = vt.QueueTime.Time
-	t.ClaimTime = vt.ClaimTime.Time
-	t.ExecStartTime = vt.ExecStartTime.Time
-	t.ExecStopTime = vt.ExecStopTime.Time
+	t.QueueTime = vt.QueueTime.Int64
+	t.ClaimTime = vt.ClaimTime.Int64
+	t.ExecStartTime = vt.ExecStartTime.Int64
+	t.ExecStopTime = vt.ExecStopTime.Int64
 	t.Content = vt.Content.String
 	if value := vt.Output; len(value) > 0 {
 		if err := json.Unmarshal(value, &t.Output); err != nil {
@@ -106,13 +105,13 @@ func (t *Task) String() string {
 	builder.WriteString("Task(")
 	builder.WriteString(fmt.Sprintf("id=%v", t.ID))
 	builder.WriteString(", QueueTime=")
-	builder.WriteString(t.QueueTime.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", t.QueueTime))
 	builder.WriteString(", ClaimTime=")
-	builder.WriteString(t.ClaimTime.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", t.ClaimTime))
 	builder.WriteString(", ExecStartTime=")
-	builder.WriteString(t.ExecStartTime.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", t.ExecStartTime))
 	builder.WriteString(", ExecStopTime=")
-	builder.WriteString(t.ExecStopTime.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", t.ExecStopTime))
 	builder.WriteString(", Content=")
 	builder.WriteString(t.Content)
 	builder.WriteString(", Output=")

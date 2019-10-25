@@ -238,7 +238,7 @@ func (tq *TaskQuery) Clone() *TaskQuery {
 // Example:
 //
 //	var v []struct {
-//		QueueTime time.Time `json:"QueueTime,omitempty"`
+//		QueueTime int64 `json:"QueueTime,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -259,7 +259,7 @@ func (tq *TaskQuery) GroupBy(field string, fields ...string) *TaskGroupBy {
 // Example:
 //
 //	var v []struct {
-//		QueueTime time.Time `json:"QueueTime,omitempty"`
+//		QueueTime int64 `json:"QueueTime,omitempty"`
 //	}
 //
 //	client.Task.Query().

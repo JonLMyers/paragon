@@ -3,6 +3,8 @@
 package migrate
 
 import (
+	"github.com/kcarretto/paragon/ent/task"
+
 	"github.com/facebookincubator/ent/dialect/sql/schema"
 	"github.com/facebookincubator/ent/schema/field"
 )
@@ -17,7 +19,7 @@ var (
 		{Name: "public_ip", Type: field.TypeString, Nullable: true},
 		{Name: "primary_mac", Type: field.TypeString, Nullable: true},
 		{Name: "hostname", Type: field.TypeString, Nullable: true},
-		{Name: "last_seen", Type: field.TypeTime, Nullable: true},
+		{Name: "last_seen", Type: field.TypeInt64, Nullable: true},
 	}
 	// TargetsTable holds the schema information for the "targets" table.
 	TargetsTable = &schema.Table{
@@ -29,10 +31,10 @@ var (
 	// TasksColumns holds the columns for the "tasks" table.
 	TasksColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "queue_time", Type: field.TypeTime},
-		{Name: "claim_time", Type: field.TypeTime, Nullable: true},
-		{Name: "exec_start_time", Type: field.TypeTime, Nullable: true},
-		{Name: "exec_stop_time", Type: field.TypeTime, Nullable: true},
+		{Name: "queue_time", Type: field.TypeInt64, Default: task.DefaultQueueTime},
+		{Name: "claim_time", Type: field.TypeInt64, Nullable: true},
+		{Name: "exec_start_time", Type: field.TypeInt64, Nullable: true},
+		{Name: "exec_stop_time", Type: field.TypeInt64, Nullable: true},
 		{Name: "content", Type: field.TypeString},
 		{Name: "output", Type: field.TypeJSON, Nullable: true},
 		{Name: "error", Type: field.TypeString, Nullable: true},

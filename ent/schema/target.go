@@ -32,7 +32,7 @@ func (Target) Fields() []ent.Field {
 		field.String("Hostname").
 			Optional().
 			Comment("The hostname for the Target"),
-		field.Time("LastSeen").
+		field.Int64("LastSeen").
 			Optional().
 			Comment("The time the Target was last seen"),
 	}

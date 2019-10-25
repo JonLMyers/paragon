@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 )
@@ -30,10 +29,10 @@ func ExampleTarget() {
 	// creating vertices for the target's edges.
 	t0 := client.Task.
 		Create().
-		SetQueueTime(time.Now()).
-		SetClaimTime(time.Now()).
-		SetExecStartTime(time.Now()).
-		SetExecStopTime(time.Now()).
+		SetQueueTime(1).
+		SetClaimTime(1).
+		SetExecStartTime(1).
+		SetExecStopTime(1).
 		SetContent("string").
 		SetOutput(nil).
 		SetError("string").
@@ -50,7 +49,7 @@ func ExampleTarget() {
 		SetPublicIP("string").
 		SetPrimaryMAC("string").
 		SetHostname("string").
-		SetLastSeen(time.Now()).
+		SetLastSeen(1).
 		AddTasks(t0).
 		SaveX(ctx)
 	log.Println("target created:", t)
@@ -80,10 +79,10 @@ func ExampleTask() {
 	// create task vertex with its edges.
 	t := client.Task.
 		Create().
-		SetQueueTime(time.Now()).
-		SetClaimTime(time.Now()).
-		SetExecStartTime(time.Now()).
-		SetExecStopTime(time.Now()).
+		SetQueueTime(1).
+		SetClaimTime(1).
+		SetExecStartTime(1).
+		SetExecStopTime(1).
 		SetContent("string").
 		SetOutput(nil).
 		SetError("string").

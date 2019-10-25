@@ -5,7 +5,6 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 )
@@ -28,7 +27,7 @@ type Target struct {
 	// Hostname holds the value of the "Hostname" field.
 	Hostname string `json:"Hostname,omitempty"`
 	// LastSeen holds the value of the "LastSeen" field.
-	LastSeen time.Time `json:"LastSeen,omitempty"`
+	LastSeen int64 `json:"LastSeen,omitempty"`
 }
 
 // FromRows scans the sql response data into Target.
@@ -41,7 +40,7 @@ func (t *Target) FromRows(rows *sql.Rows) error {
 		PublicIP    sql.NullString
 		PrimaryMAC  sql.NullString
 		Hostname    sql.NullString
-		LastSeen    sql.NullTime
+		LastSeen    sql.NullInt64
 	}
 	// the order here should be the same as in the `target.Columns`.
 	if err := rows.Scan(
@@ -63,7 +62,7 @@ func (t *Target) FromRows(rows *sql.Rows) error {
 	t.PublicIP = vt.PublicIP.String
 	t.PrimaryMAC = vt.PrimaryMAC.String
 	t.Hostname = vt.Hostname.String
-	t.LastSeen = vt.LastSeen.Time
+	t.LastSeen = vt.LastSeen.Int64
 	return nil
 }
 
@@ -108,7 +107,7 @@ func (t *Target) String() string {
 	builder.WriteString(", Hostname=")
 	builder.WriteString(t.Hostname)
 	builder.WriteString(", LastSeen=")
-	builder.WriteString(t.LastSeen.Format(time.ANSIC))
+	builder.WriteString(fmt.Sprintf("%v", t.LastSeen))
 	builder.WriteByte(')')
 	return builder.String()
 }

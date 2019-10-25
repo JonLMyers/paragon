@@ -1,3 +1,5 @@
+// +build dev
+
 package main
 
 import (
@@ -15,8 +17,8 @@ func getClient(ctx context.Context) *ent.Client {
 	}
 
 	if err := client.Schema.Create(ctx, migrate.WithGlobalUniqueID(true)); err != nil {
-        panic(err)
-    }
+		panic(err)
+	}
 
 	return client
 }

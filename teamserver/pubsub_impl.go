@@ -38,7 +38,7 @@ func (srv *Server) agentCheckin(ctx context.Context, event events.AgentCheckin) 
 		if err != nil {
 			return err
 		}
-		_, err = targetEnt.Update().SetLastSeen(time.Unix(event.GetSeenTime(), 0)).
+		_, err = targetEnt.Update().SetLastSeen(event.SeenTime).
 			Save(ctx)
 		if err != nil {
 			return err
@@ -55,7 +55,7 @@ func (srv *Server) agentCheckin(ctx context.Context, event events.AgentCheckin) 
 		SetHostname(event.Agent.Hostname).
 		SetPrimaryIP(event.Agent.PrimaryIP).
 		SetPrimaryMAC(event.Agent.PrimaryMAC).
-		SetLastSeen(time.Unix(event.SeenTime, 0)).
+		SetLastSeen(event.SeenTime).
 		Save(ctx)
 	if err != nil {
 		return err
@@ -105,14 +105,14 @@ func (srv *Server) taskClaimed(ctx context.Context, event events.TaskClaimed) er
 		return err
 	}
 	task, err = task.Update().
-		SetClaimTime(time.Now()).
+		SetClaimTime(time.Now().Unix()).
 		Save(ctx)
 	if err != nil {
 		return err
 	}
 	target := task.QueryTarget().FirstX(ctx)
 	target, err = target.Update().
-		SetLastSeen(time.Now()).
+		SetLastSeen(time.Now().Unix()).
 		Save(ctx)
 	if err != nil {
 		return err
@@ -121,7 +121,7 @@ func (srv *Server) taskClaimed(ctx context.Context, event events.TaskClaimed) er
 }
 
 func (srv *Server) taskExecuted(ctx context.Context, event events.TaskExecuted) error {
-	taskID, err := strconv.Atoi(event.GetId())
+	taskID, err := strconv.Atoi(event.Id)
 	if err != nil {
 		return err
 	}
@@ -129,21 +129,18 @@ func (srv *Server) taskExecuted(ctx context.Context, event events.TaskExecuted) 
 	if err != nil {
 		return err
 	}
-	execStartTime := time.Unix(event.GetExecStartTime(), 0)
-	execStopTime := time.Unix(event.GetExecStopTime(), 0)
-	output := event.GetOutput()
 	task, err = task.Update().
-		SetExecStartTime(execStartTime).
-		SetExecStopTime(execStopTime).
-		SetOutput(output).
-		SetError(event.GetError()).
+		SetExecStartTime(event.ExecStartTime).
+		SetExecStopTime(event.ExecStopTime).
+		SetOutput(event.Output).
+		SetError(event.Error).
 		Save(ctx)
 	if err != nil {
 		return err
 	}
 	target := task.QueryTarget().FirstX(ctx)
 	target, err = target.Update().
-		SetLastSeen(time.Now()).
+		SetLastSeen(time.Now().Unix()).
 		Save(ctx)
 	if err != nil {
 		return err

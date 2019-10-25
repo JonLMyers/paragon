@@ -3,8 +3,6 @@
 package task
 
 import (
-	"time"
-
 	"github.com/kcarretto/paragon/ent/schema"
 )
 
@@ -60,15 +58,10 @@ var (
 	// descQueueTime is the schema descriptor for QueueTime field.
 	descQueueTime = fields[0].Descriptor()
 	// DefaultQueueTime holds the default value on creation for the QueueTime field.
-	DefaultQueueTime = descQueueTime.Default.(func() time.Time)
+	DefaultQueueTime = descQueueTime.Default.(int64)
 
 	// descContent is the schema descriptor for Content field.
 	descContent = fields[4].Descriptor()
 	// ContentValidator is a validator for the "Content" field. It is called by the builders before save.
 	ContentValidator = descContent.Validators[0].(func(string) error)
-
-	// descError is the schema descriptor for Error field.
-	descError = fields[6].Descriptor()
-	// ErrorValidator is a validator for the "Error" field. It is called by the builders before save.
-	ErrorValidator = descError.Validators[0].(func(string) error)
 )

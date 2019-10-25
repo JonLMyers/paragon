@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/predicate"
@@ -18,12 +17,16 @@ import (
 // TaskUpdate is the builder for updating Task entities.
 type TaskUpdate struct {
 	config
-	QueueTime          *time.Time
-	ClaimTime          *time.Time
+	QueueTime          *int64
+	addQueueTime       *int64
+	ClaimTime          *int64
+	addClaimTime       *int64
 	clearClaimTime     bool
-	ExecStartTime      *time.Time
+	ExecStartTime      *int64
+	addExecStartTime   *int64
 	clearExecStartTime bool
-	ExecStopTime       *time.Time
+	ExecStopTime       *int64
+	addExecStopTime    *int64
 	clearExecStopTime  bool
 	Content            *string
 	Output             *[]string
@@ -44,29 +47,51 @@ func (tu *TaskUpdate) Where(ps ...predicate.Task) *TaskUpdate {
 }
 
 // SetQueueTime sets the QueueTime field.
-func (tu *TaskUpdate) SetQueueTime(t time.Time) *TaskUpdate {
-	tu.QueueTime = &t
+func (tu *TaskUpdate) SetQueueTime(i int64) *TaskUpdate {
+	tu.QueueTime = &i
+	tu.addQueueTime = nil
 	return tu
 }
 
 // SetNillableQueueTime sets the QueueTime field if the given value is not nil.
-func (tu *TaskUpdate) SetNillableQueueTime(t *time.Time) *TaskUpdate {
-	if t != nil {
-		tu.SetQueueTime(*t)
+func (tu *TaskUpdate) SetNillableQueueTime(i *int64) *TaskUpdate {
+	if i != nil {
+		tu.SetQueueTime(*i)
+	}
+	return tu
+}
+
+// AddQueueTime adds i to QueueTime.
+func (tu *TaskUpdate) AddQueueTime(i int64) *TaskUpdate {
+	if tu.addQueueTime == nil {
+		tu.addQueueTime = &i
+	} else {
+		*tu.addQueueTime += i
 	}
 	return tu
 }
 
 // SetClaimTime sets the ClaimTime field.
-func (tu *TaskUpdate) SetClaimTime(t time.Time) *TaskUpdate {
-	tu.ClaimTime = &t
+func (tu *TaskUpdate) SetClaimTime(i int64) *TaskUpdate {
+	tu.ClaimTime = &i
+	tu.addClaimTime = nil
 	return tu
 }
 
 // SetNillableClaimTime sets the ClaimTime field if the given value is not nil.
-func (tu *TaskUpdate) SetNillableClaimTime(t *time.Time) *TaskUpdate {
-	if t != nil {
-		tu.SetClaimTime(*t)
+func (tu *TaskUpdate) SetNillableClaimTime(i *int64) *TaskUpdate {
+	if i != nil {
+		tu.SetClaimTime(*i)
+	}
+	return tu
+}
+
+// AddClaimTime adds i to ClaimTime.
+func (tu *TaskUpdate) AddClaimTime(i int64) *TaskUpdate {
+	if tu.addClaimTime == nil {
+		tu.addClaimTime = &i
+	} else {
+		*tu.addClaimTime += i
 	}
 	return tu
 }
@@ -79,15 +104,26 @@ func (tu *TaskUpdate) ClearClaimTime() *TaskUpdate {
 }
 
 // SetExecStartTime sets the ExecStartTime field.
-func (tu *TaskUpdate) SetExecStartTime(t time.Time) *TaskUpdate {
-	tu.ExecStartTime = &t
+func (tu *TaskUpdate) SetExecStartTime(i int64) *TaskUpdate {
+	tu.ExecStartTime = &i
+	tu.addExecStartTime = nil
 	return tu
 }
 
 // SetNillableExecStartTime sets the ExecStartTime field if the given value is not nil.
-func (tu *TaskUpdate) SetNillableExecStartTime(t *time.Time) *TaskUpdate {
-	if t != nil {
-		tu.SetExecStartTime(*t)
+func (tu *TaskUpdate) SetNillableExecStartTime(i *int64) *TaskUpdate {
+	if i != nil {
+		tu.SetExecStartTime(*i)
+	}
+	return tu
+}
+
+// AddExecStartTime adds i to ExecStartTime.
+func (tu *TaskUpdate) AddExecStartTime(i int64) *TaskUpdate {
+	if tu.addExecStartTime == nil {
+		tu.addExecStartTime = &i
+	} else {
+		*tu.addExecStartTime += i
 	}
 	return tu
 }
@@ -100,15 +136,26 @@ func (tu *TaskUpdate) ClearExecStartTime() *TaskUpdate {
 }
 
 // SetExecStopTime sets the ExecStopTime field.
-func (tu *TaskUpdate) SetExecStopTime(t time.Time) *TaskUpdate {
-	tu.ExecStopTime = &t
+func (tu *TaskUpdate) SetExecStopTime(i int64) *TaskUpdate {
+	tu.ExecStopTime = &i
+	tu.addExecStopTime = nil
 	return tu
 }
 
 // SetNillableExecStopTime sets the ExecStopTime field if the given value is not nil.
-func (tu *TaskUpdate) SetNillableExecStopTime(t *time.Time) *TaskUpdate {
-	if t != nil {
-		tu.SetExecStopTime(*t)
+func (tu *TaskUpdate) SetNillableExecStopTime(i *int64) *TaskUpdate {
+	if i != nil {
+		tu.SetExecStopTime(*i)
+	}
+	return tu
+}
+
+// AddExecStopTime adds i to ExecStopTime.
+func (tu *TaskUpdate) AddExecStopTime(i int64) *TaskUpdate {
+	if tu.addExecStopTime == nil {
+		tu.addExecStopTime = &i
+	} else {
+		*tu.addExecStopTime += i
 	}
 	return tu
 }
@@ -208,11 +255,6 @@ func (tu *TaskUpdate) Save(ctx context.Context) (int, error) {
 			return 0, fmt.Errorf("ent: validator failed for field \"Content\": %v", err)
 		}
 	}
-	if tu.Error != nil {
-		if err := task.ErrorValidator(*tu.Error); err != nil {
-			return 0, fmt.Errorf("ent: validator failed for field \"Error\": %v", err)
-		}
-	}
 	if len(tu.target) > 1 {
 		return 0, errors.New("ent: multiple assignments on a unique edge \"target\"")
 	}
@@ -278,8 +320,14 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value := tu.QueueTime; value != nil {
 		builder.Set(task.FieldQueueTime, *value)
 	}
+	if value := tu.addQueueTime; value != nil {
+		builder.Add(task.FieldQueueTime, *value)
+	}
 	if value := tu.ClaimTime; value != nil {
 		builder.Set(task.FieldClaimTime, *value)
+	}
+	if value := tu.addClaimTime; value != nil {
+		builder.Add(task.FieldClaimTime, *value)
 	}
 	if tu.clearClaimTime {
 		builder.SetNull(task.FieldClaimTime)
@@ -287,11 +335,17 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value := tu.ExecStartTime; value != nil {
 		builder.Set(task.FieldExecStartTime, *value)
 	}
+	if value := tu.addExecStartTime; value != nil {
+		builder.Add(task.FieldExecStartTime, *value)
+	}
 	if tu.clearExecStartTime {
 		builder.SetNull(task.FieldExecStartTime)
 	}
 	if value := tu.ExecStopTime; value != nil {
 		builder.Set(task.FieldExecStopTime, *value)
+	}
+	if value := tu.addExecStopTime; value != nil {
+		builder.Add(task.FieldExecStopTime, *value)
 	}
 	if tu.clearExecStopTime {
 		builder.SetNull(task.FieldExecStopTime)
@@ -357,12 +411,16 @@ func (tu *TaskUpdate) sqlSave(ctx context.Context) (n int, err error) {
 type TaskUpdateOne struct {
 	config
 	id                 int
-	QueueTime          *time.Time
-	ClaimTime          *time.Time
+	QueueTime          *int64
+	addQueueTime       *int64
+	ClaimTime          *int64
+	addClaimTime       *int64
 	clearClaimTime     bool
-	ExecStartTime      *time.Time
+	ExecStartTime      *int64
+	addExecStartTime   *int64
 	clearExecStartTime bool
-	ExecStopTime       *time.Time
+	ExecStopTime       *int64
+	addExecStopTime    *int64
 	clearExecStopTime  bool
 	Content            *string
 	Output             *[]string
@@ -376,29 +434,51 @@ type TaskUpdateOne struct {
 }
 
 // SetQueueTime sets the QueueTime field.
-func (tuo *TaskUpdateOne) SetQueueTime(t time.Time) *TaskUpdateOne {
-	tuo.QueueTime = &t
+func (tuo *TaskUpdateOne) SetQueueTime(i int64) *TaskUpdateOne {
+	tuo.QueueTime = &i
+	tuo.addQueueTime = nil
 	return tuo
 }
 
 // SetNillableQueueTime sets the QueueTime field if the given value is not nil.
-func (tuo *TaskUpdateOne) SetNillableQueueTime(t *time.Time) *TaskUpdateOne {
-	if t != nil {
-		tuo.SetQueueTime(*t)
+func (tuo *TaskUpdateOne) SetNillableQueueTime(i *int64) *TaskUpdateOne {
+	if i != nil {
+		tuo.SetQueueTime(*i)
+	}
+	return tuo
+}
+
+// AddQueueTime adds i to QueueTime.
+func (tuo *TaskUpdateOne) AddQueueTime(i int64) *TaskUpdateOne {
+	if tuo.addQueueTime == nil {
+		tuo.addQueueTime = &i
+	} else {
+		*tuo.addQueueTime += i
 	}
 	return tuo
 }
 
 // SetClaimTime sets the ClaimTime field.
-func (tuo *TaskUpdateOne) SetClaimTime(t time.Time) *TaskUpdateOne {
-	tuo.ClaimTime = &t
+func (tuo *TaskUpdateOne) SetClaimTime(i int64) *TaskUpdateOne {
+	tuo.ClaimTime = &i
+	tuo.addClaimTime = nil
 	return tuo
 }
 
 // SetNillableClaimTime sets the ClaimTime field if the given value is not nil.
-func (tuo *TaskUpdateOne) SetNillableClaimTime(t *time.Time) *TaskUpdateOne {
-	if t != nil {
-		tuo.SetClaimTime(*t)
+func (tuo *TaskUpdateOne) SetNillableClaimTime(i *int64) *TaskUpdateOne {
+	if i != nil {
+		tuo.SetClaimTime(*i)
+	}
+	return tuo
+}
+
+// AddClaimTime adds i to ClaimTime.
+func (tuo *TaskUpdateOne) AddClaimTime(i int64) *TaskUpdateOne {
+	if tuo.addClaimTime == nil {
+		tuo.addClaimTime = &i
+	} else {
+		*tuo.addClaimTime += i
 	}
 	return tuo
 }
@@ -411,15 +491,26 @@ func (tuo *TaskUpdateOne) ClearClaimTime() *TaskUpdateOne {
 }
 
 // SetExecStartTime sets the ExecStartTime field.
-func (tuo *TaskUpdateOne) SetExecStartTime(t time.Time) *TaskUpdateOne {
-	tuo.ExecStartTime = &t
+func (tuo *TaskUpdateOne) SetExecStartTime(i int64) *TaskUpdateOne {
+	tuo.ExecStartTime = &i
+	tuo.addExecStartTime = nil
 	return tuo
 }
 
 // SetNillableExecStartTime sets the ExecStartTime field if the given value is not nil.
-func (tuo *TaskUpdateOne) SetNillableExecStartTime(t *time.Time) *TaskUpdateOne {
-	if t != nil {
-		tuo.SetExecStartTime(*t)
+func (tuo *TaskUpdateOne) SetNillableExecStartTime(i *int64) *TaskUpdateOne {
+	if i != nil {
+		tuo.SetExecStartTime(*i)
+	}
+	return tuo
+}
+
+// AddExecStartTime adds i to ExecStartTime.
+func (tuo *TaskUpdateOne) AddExecStartTime(i int64) *TaskUpdateOne {
+	if tuo.addExecStartTime == nil {
+		tuo.addExecStartTime = &i
+	} else {
+		*tuo.addExecStartTime += i
 	}
 	return tuo
 }
@@ -432,15 +523,26 @@ func (tuo *TaskUpdateOne) ClearExecStartTime() *TaskUpdateOne {
 }
 
 // SetExecStopTime sets the ExecStopTime field.
-func (tuo *TaskUpdateOne) SetExecStopTime(t time.Time) *TaskUpdateOne {
-	tuo.ExecStopTime = &t
+func (tuo *TaskUpdateOne) SetExecStopTime(i int64) *TaskUpdateOne {
+	tuo.ExecStopTime = &i
+	tuo.addExecStopTime = nil
 	return tuo
 }
 
 // SetNillableExecStopTime sets the ExecStopTime field if the given value is not nil.
-func (tuo *TaskUpdateOne) SetNillableExecStopTime(t *time.Time) *TaskUpdateOne {
-	if t != nil {
-		tuo.SetExecStopTime(*t)
+func (tuo *TaskUpdateOne) SetNillableExecStopTime(i *int64) *TaskUpdateOne {
+	if i != nil {
+		tuo.SetExecStopTime(*i)
+	}
+	return tuo
+}
+
+// AddExecStopTime adds i to ExecStopTime.
+func (tuo *TaskUpdateOne) AddExecStopTime(i int64) *TaskUpdateOne {
+	if tuo.addExecStopTime == nil {
+		tuo.addExecStopTime = &i
+	} else {
+		*tuo.addExecStopTime += i
 	}
 	return tuo
 }
@@ -540,11 +642,6 @@ func (tuo *TaskUpdateOne) Save(ctx context.Context) (*Task, error) {
 			return nil, fmt.Errorf("ent: validator failed for field \"Content\": %v", err)
 		}
 	}
-	if tuo.Error != nil {
-		if err := task.ErrorValidator(*tuo.Error); err != nil {
-			return nil, fmt.Errorf("ent: validator failed for field \"Error\": %v", err)
-		}
-	}
 	if len(tuo.target) > 1 {
 		return nil, errors.New("ent: multiple assignments on a unique edge \"target\"")
 	}
@@ -614,12 +711,20 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (t *Task, err error) {
 		builder.Set(task.FieldQueueTime, *value)
 		t.QueueTime = *value
 	}
+	if value := tuo.addQueueTime; value != nil {
+		builder.Add(task.FieldQueueTime, *value)
+		t.QueueTime += *value
+	}
 	if value := tuo.ClaimTime; value != nil {
 		builder.Set(task.FieldClaimTime, *value)
 		t.ClaimTime = *value
 	}
+	if value := tuo.addClaimTime; value != nil {
+		builder.Add(task.FieldClaimTime, *value)
+		t.ClaimTime += *value
+	}
 	if tuo.clearClaimTime {
-		var value time.Time
+		var value int64
 		t.ClaimTime = value
 		builder.SetNull(task.FieldClaimTime)
 	}
@@ -627,8 +732,12 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (t *Task, err error) {
 		builder.Set(task.FieldExecStartTime, *value)
 		t.ExecStartTime = *value
 	}
+	if value := tuo.addExecStartTime; value != nil {
+		builder.Add(task.FieldExecStartTime, *value)
+		t.ExecStartTime += *value
+	}
 	if tuo.clearExecStartTime {
-		var value time.Time
+		var value int64
 		t.ExecStartTime = value
 		builder.SetNull(task.FieldExecStartTime)
 	}
@@ -636,8 +745,12 @@ func (tuo *TaskUpdateOne) sqlSave(ctx context.Context) (t *Task, err error) {
 		builder.Set(task.FieldExecStopTime, *value)
 		t.ExecStopTime = *value
 	}
+	if value := tuo.addExecStopTime; value != nil {
+		builder.Add(task.FieldExecStopTime, *value)
+		t.ExecStopTime += *value
+	}
 	if tuo.clearExecStopTime {
-		var value time.Time
+		var value int64
 		t.ExecStopTime = value
 		builder.SetNull(task.FieldExecStopTime)
 	}

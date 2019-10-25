@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/task"
@@ -16,10 +15,10 @@ import (
 // TaskCreate is the builder for creating a Task entity.
 type TaskCreate struct {
 	config
-	QueueTime     *time.Time
-	ClaimTime     *time.Time
-	ExecStartTime *time.Time
-	ExecStopTime  *time.Time
+	QueueTime     *int64
+	ClaimTime     *int64
+	ExecStartTime *int64
+	ExecStopTime  *int64
 	Content       *string
 	Output        *[]string
 	Error         *string
@@ -28,57 +27,57 @@ type TaskCreate struct {
 }
 
 // SetQueueTime sets the QueueTime field.
-func (tc *TaskCreate) SetQueueTime(t time.Time) *TaskCreate {
-	tc.QueueTime = &t
+func (tc *TaskCreate) SetQueueTime(i int64) *TaskCreate {
+	tc.QueueTime = &i
 	return tc
 }
 
 // SetNillableQueueTime sets the QueueTime field if the given value is not nil.
-func (tc *TaskCreate) SetNillableQueueTime(t *time.Time) *TaskCreate {
-	if t != nil {
-		tc.SetQueueTime(*t)
+func (tc *TaskCreate) SetNillableQueueTime(i *int64) *TaskCreate {
+	if i != nil {
+		tc.SetQueueTime(*i)
 	}
 	return tc
 }
 
 // SetClaimTime sets the ClaimTime field.
-func (tc *TaskCreate) SetClaimTime(t time.Time) *TaskCreate {
-	tc.ClaimTime = &t
+func (tc *TaskCreate) SetClaimTime(i int64) *TaskCreate {
+	tc.ClaimTime = &i
 	return tc
 }
 
 // SetNillableClaimTime sets the ClaimTime field if the given value is not nil.
-func (tc *TaskCreate) SetNillableClaimTime(t *time.Time) *TaskCreate {
-	if t != nil {
-		tc.SetClaimTime(*t)
+func (tc *TaskCreate) SetNillableClaimTime(i *int64) *TaskCreate {
+	if i != nil {
+		tc.SetClaimTime(*i)
 	}
 	return tc
 }
 
 // SetExecStartTime sets the ExecStartTime field.
-func (tc *TaskCreate) SetExecStartTime(t time.Time) *TaskCreate {
-	tc.ExecStartTime = &t
+func (tc *TaskCreate) SetExecStartTime(i int64) *TaskCreate {
+	tc.ExecStartTime = &i
 	return tc
 }
 
 // SetNillableExecStartTime sets the ExecStartTime field if the given value is not nil.
-func (tc *TaskCreate) SetNillableExecStartTime(t *time.Time) *TaskCreate {
-	if t != nil {
-		tc.SetExecStartTime(*t)
+func (tc *TaskCreate) SetNillableExecStartTime(i *int64) *TaskCreate {
+	if i != nil {
+		tc.SetExecStartTime(*i)
 	}
 	return tc
 }
 
 // SetExecStopTime sets the ExecStopTime field.
-func (tc *TaskCreate) SetExecStopTime(t time.Time) *TaskCreate {
-	tc.ExecStopTime = &t
+func (tc *TaskCreate) SetExecStopTime(i int64) *TaskCreate {
+	tc.ExecStopTime = &i
 	return tc
 }
 
 // SetNillableExecStopTime sets the ExecStopTime field if the given value is not nil.
-func (tc *TaskCreate) SetNillableExecStopTime(t *time.Time) *TaskCreate {
-	if t != nil {
-		tc.SetExecStopTime(*t)
+func (tc *TaskCreate) SetNillableExecStopTime(i *int64) *TaskCreate {
+	if i != nil {
+		tc.SetExecStopTime(*i)
 	}
 	return tc
 }
@@ -140,7 +139,7 @@ func (tc *TaskCreate) SetTarget(t *Target) *TaskCreate {
 // Save creates the Task in the database.
 func (tc *TaskCreate) Save(ctx context.Context) (*Task, error) {
 	if tc.QueueTime == nil {
-		v := task.DefaultQueueTime()
+		v := task.DefaultQueueTime
 		tc.QueueTime = &v
 	}
 	if tc.Content == nil {
@@ -148,11 +147,6 @@ func (tc *TaskCreate) Save(ctx context.Context) (*Task, error) {
 	}
 	if err := task.ContentValidator(*tc.Content); err != nil {
 		return nil, fmt.Errorf("ent: validator failed for field \"Content\": %v", err)
-	}
-	if tc.Error != nil {
-		if err := task.ErrorValidator(*tc.Error); err != nil {
-			return nil, fmt.Errorf("ent: validator failed for field \"Error\": %v", err)
-		}
 	}
 	if len(tc.target) > 1 {
 		return nil, errors.New("ent: multiple assignments on a unique edge \"target\"")

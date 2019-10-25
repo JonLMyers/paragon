@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"sort"
 )
 
 func (srv *Server) handleMakeTask(w http.ResponseWriter, r *http.Request) {
@@ -65,10 +66,10 @@ func (srv *Server) handleGetTask(w http.ResponseWriter, r *http.Request) {
 
 		data := map[string]interface{}{
 			"id":            task.ID,
-			"queueTime":     task.QueueTime.Unix(),
-			"claimTime":     task.ClaimTime.Unix(),
-			"execStartTime": task.ExecStartTime.Unix(),
-			"execStopTime":  task.ExecStopTime.Unix(),
+			"queueTime":     task.QueueTime,
+			"claimTime":     task.ClaimTime,
+			"execStartTime": task.ExecStartTime,
+			"execStopTime":  task.ExecStopTime,
 			"content":       task.Content,
 			"output":        task.Output,
 			"error":         task.Error,
@@ -168,6 +169,9 @@ func (srv *Server) handleListTasksForTarget(w http.ResponseWriter, r *http.Reque
 		}
 
 		tasks, err := target.QueryTasks().All(ctx)
+		sort.Slice(tasks, func(i, j int) bool {
+			return tasks[i].QueueTime < tasks[j].QueueTime
+		})
 		var taskIDs []int
 		for _, task := range tasks {
 			taskIDs = append(taskIDs, task.ID)

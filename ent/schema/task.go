@@ -16,18 +16,16 @@ type Task struct {
 // Fields of the Task.
 func (Task) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("QueueTime").
-			Default(func() time.Time {
-				return time.Now()
-			}).
+		field.Int64("QueueTime").
+			Default(time.Now().Unix()).
 			Comment("The timestamp for when the Task was queued/created"),
-		field.Time("ClaimTime").
+		field.Int64("ClaimTime").
 			Optional().
 			Comment("The timestamp for when the Task was claime."),
-		field.Time("ExecStartTime").
+		field.Int64("ExecStartTime").
 			Optional().
 			Comment("The timestamp for when the Task was executed"),
-		field.Time("ExecStopTime").
+		field.Int64("ExecStopTime").
 			Optional().
 			Comment("The timestamp for when the Task's execution ended"),
 		field.String("Content").
@@ -38,7 +36,6 @@ func (Task) Fields() []ent.Field {
 			Comment("The different outputs from executing the task"),
 		field.String("Error").
 			Optional().
-			NotEmpty().
 			Comment("The error, if any, produced while executing the Task"),
 		field.String("SessionID").
 			Optional(),

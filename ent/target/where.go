@@ -3,8 +3,6 @@
 package target
 
 import (
-	"time"
-
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/predicate"
 )
@@ -165,7 +163,7 @@ func Hostname(v string) predicate.Target {
 }
 
 // LastSeen applies equality check predicate on the "LastSeen" field. It's identical to LastSeenEQ.
-func LastSeen(v time.Time) predicate.Target {
+func LastSeen(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldLastSeen), v))
@@ -1086,7 +1084,7 @@ func HostnameContainsFold(v string) predicate.Target {
 }
 
 // LastSeenEQ applies the EQ predicate on the "LastSeen" field.
-func LastSeenEQ(v time.Time) predicate.Target {
+func LastSeenEQ(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldLastSeen), v))
@@ -1095,7 +1093,7 @@ func LastSeenEQ(v time.Time) predicate.Target {
 }
 
 // LastSeenNEQ applies the NEQ predicate on the "LastSeen" field.
-func LastSeenNEQ(v time.Time) predicate.Target {
+func LastSeenNEQ(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.NEQ(s.C(FieldLastSeen), v))
@@ -1104,7 +1102,7 @@ func LastSeenNEQ(v time.Time) predicate.Target {
 }
 
 // LastSeenIn applies the In predicate on the "LastSeen" field.
-func LastSeenIn(vs ...time.Time) predicate.Target {
+func LastSeenIn(vs ...int64) predicate.Target {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1123,7 +1121,7 @@ func LastSeenIn(vs ...time.Time) predicate.Target {
 }
 
 // LastSeenNotIn applies the NotIn predicate on the "LastSeen" field.
-func LastSeenNotIn(vs ...time.Time) predicate.Target {
+func LastSeenNotIn(vs ...int64) predicate.Target {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -1142,7 +1140,7 @@ func LastSeenNotIn(vs ...time.Time) predicate.Target {
 }
 
 // LastSeenGT applies the GT predicate on the "LastSeen" field.
-func LastSeenGT(v time.Time) predicate.Target {
+func LastSeenGT(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.GT(s.C(FieldLastSeen), v))
@@ -1151,7 +1149,7 @@ func LastSeenGT(v time.Time) predicate.Target {
 }
 
 // LastSeenGTE applies the GTE predicate on the "LastSeen" field.
-func LastSeenGTE(v time.Time) predicate.Target {
+func LastSeenGTE(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.GTE(s.C(FieldLastSeen), v))
@@ -1160,7 +1158,7 @@ func LastSeenGTE(v time.Time) predicate.Target {
 }
 
 // LastSeenLT applies the LT predicate on the "LastSeen" field.
-func LastSeenLT(v time.Time) predicate.Target {
+func LastSeenLT(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.LT(s.C(FieldLastSeen), v))
@@ -1169,7 +1167,7 @@ func LastSeenLT(v time.Time) predicate.Target {
 }
 
 // LastSeenLTE applies the LTE predicate on the "LastSeen" field.
-func LastSeenLTE(v time.Time) predicate.Target {
+func LastSeenLTE(v int64) predicate.Target {
 	return predicate.Target(
 		func(s *sql.Selector) {
 			s.Where(sql.LTE(s.C(FieldLastSeen), v))

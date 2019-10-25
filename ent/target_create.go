@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/target"
@@ -22,7 +21,7 @@ type TargetCreate struct {
 	PublicIP    *string
 	PrimaryMAC  *string
 	Hostname    *string
-	LastSeen    *time.Time
+	LastSeen    *int64
 	tasks       map[int]struct{}
 }
 
@@ -103,15 +102,15 @@ func (tc *TargetCreate) SetNillableHostname(s *string) *TargetCreate {
 }
 
 // SetLastSeen sets the LastSeen field.
-func (tc *TargetCreate) SetLastSeen(t time.Time) *TargetCreate {
-	tc.LastSeen = &t
+func (tc *TargetCreate) SetLastSeen(i int64) *TargetCreate {
+	tc.LastSeen = &i
 	return tc
 }
 
 // SetNillableLastSeen sets the LastSeen field if the given value is not nil.
-func (tc *TargetCreate) SetNillableLastSeen(t *time.Time) *TargetCreate {
-	if t != nil {
-		tc.SetLastSeen(*t)
+func (tc *TargetCreate) SetNillableLastSeen(i *int64) *TargetCreate {
+	if i != nil {
+		tc.SetLastSeen(*i)
 	}
 	return tc
 }

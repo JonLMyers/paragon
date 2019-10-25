@@ -3,8 +3,6 @@
 package task
 
 import (
-	"time"
-
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/kcarretto/paragon/ent/predicate"
 )
@@ -111,7 +109,7 @@ func IDLTE(id int) predicate.Task {
 }
 
 // QueueTime applies equality check predicate on the "QueueTime" field. It's identical to QueueTimeEQ.
-func QueueTime(v time.Time) predicate.Task {
+func QueueTime(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldQueueTime), v))
@@ -120,7 +118,7 @@ func QueueTime(v time.Time) predicate.Task {
 }
 
 // ClaimTime applies equality check predicate on the "ClaimTime" field. It's identical to ClaimTimeEQ.
-func ClaimTime(v time.Time) predicate.Task {
+func ClaimTime(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldClaimTime), v))
@@ -129,7 +127,7 @@ func ClaimTime(v time.Time) predicate.Task {
 }
 
 // ExecStartTime applies equality check predicate on the "ExecStartTime" field. It's identical to ExecStartTimeEQ.
-func ExecStartTime(v time.Time) predicate.Task {
+func ExecStartTime(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldExecStartTime), v))
@@ -138,7 +136,7 @@ func ExecStartTime(v time.Time) predicate.Task {
 }
 
 // ExecStopTime applies equality check predicate on the "ExecStopTime" field. It's identical to ExecStopTimeEQ.
-func ExecStopTime(v time.Time) predicate.Task {
+func ExecStopTime(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldExecStopTime), v))
@@ -174,7 +172,7 @@ func SessionID(v string) predicate.Task {
 }
 
 // QueueTimeEQ applies the EQ predicate on the "QueueTime" field.
-func QueueTimeEQ(v time.Time) predicate.Task {
+func QueueTimeEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldQueueTime), v))
@@ -183,7 +181,7 @@ func QueueTimeEQ(v time.Time) predicate.Task {
 }
 
 // QueueTimeNEQ applies the NEQ predicate on the "QueueTime" field.
-func QueueTimeNEQ(v time.Time) predicate.Task {
+func QueueTimeNEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.NEQ(s.C(FieldQueueTime), v))
@@ -192,7 +190,7 @@ func QueueTimeNEQ(v time.Time) predicate.Task {
 }
 
 // QueueTimeIn applies the In predicate on the "QueueTime" field.
-func QueueTimeIn(vs ...time.Time) predicate.Task {
+func QueueTimeIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -211,7 +209,7 @@ func QueueTimeIn(vs ...time.Time) predicate.Task {
 }
 
 // QueueTimeNotIn applies the NotIn predicate on the "QueueTime" field.
-func QueueTimeNotIn(vs ...time.Time) predicate.Task {
+func QueueTimeNotIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -230,7 +228,7 @@ func QueueTimeNotIn(vs ...time.Time) predicate.Task {
 }
 
 // QueueTimeGT applies the GT predicate on the "QueueTime" field.
-func QueueTimeGT(v time.Time) predicate.Task {
+func QueueTimeGT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GT(s.C(FieldQueueTime), v))
@@ -239,7 +237,7 @@ func QueueTimeGT(v time.Time) predicate.Task {
 }
 
 // QueueTimeGTE applies the GTE predicate on the "QueueTime" field.
-func QueueTimeGTE(v time.Time) predicate.Task {
+func QueueTimeGTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GTE(s.C(FieldQueueTime), v))
@@ -248,7 +246,7 @@ func QueueTimeGTE(v time.Time) predicate.Task {
 }
 
 // QueueTimeLT applies the LT predicate on the "QueueTime" field.
-func QueueTimeLT(v time.Time) predicate.Task {
+func QueueTimeLT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LT(s.C(FieldQueueTime), v))
@@ -257,7 +255,7 @@ func QueueTimeLT(v time.Time) predicate.Task {
 }
 
 // QueueTimeLTE applies the LTE predicate on the "QueueTime" field.
-func QueueTimeLTE(v time.Time) predicate.Task {
+func QueueTimeLTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LTE(s.C(FieldQueueTime), v))
@@ -266,7 +264,7 @@ func QueueTimeLTE(v time.Time) predicate.Task {
 }
 
 // ClaimTimeEQ applies the EQ predicate on the "ClaimTime" field.
-func ClaimTimeEQ(v time.Time) predicate.Task {
+func ClaimTimeEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldClaimTime), v))
@@ -275,7 +273,7 @@ func ClaimTimeEQ(v time.Time) predicate.Task {
 }
 
 // ClaimTimeNEQ applies the NEQ predicate on the "ClaimTime" field.
-func ClaimTimeNEQ(v time.Time) predicate.Task {
+func ClaimTimeNEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.NEQ(s.C(FieldClaimTime), v))
@@ -284,7 +282,7 @@ func ClaimTimeNEQ(v time.Time) predicate.Task {
 }
 
 // ClaimTimeIn applies the In predicate on the "ClaimTime" field.
-func ClaimTimeIn(vs ...time.Time) predicate.Task {
+func ClaimTimeIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -303,7 +301,7 @@ func ClaimTimeIn(vs ...time.Time) predicate.Task {
 }
 
 // ClaimTimeNotIn applies the NotIn predicate on the "ClaimTime" field.
-func ClaimTimeNotIn(vs ...time.Time) predicate.Task {
+func ClaimTimeNotIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -322,7 +320,7 @@ func ClaimTimeNotIn(vs ...time.Time) predicate.Task {
 }
 
 // ClaimTimeGT applies the GT predicate on the "ClaimTime" field.
-func ClaimTimeGT(v time.Time) predicate.Task {
+func ClaimTimeGT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GT(s.C(FieldClaimTime), v))
@@ -331,7 +329,7 @@ func ClaimTimeGT(v time.Time) predicate.Task {
 }
 
 // ClaimTimeGTE applies the GTE predicate on the "ClaimTime" field.
-func ClaimTimeGTE(v time.Time) predicate.Task {
+func ClaimTimeGTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GTE(s.C(FieldClaimTime), v))
@@ -340,7 +338,7 @@ func ClaimTimeGTE(v time.Time) predicate.Task {
 }
 
 // ClaimTimeLT applies the LT predicate on the "ClaimTime" field.
-func ClaimTimeLT(v time.Time) predicate.Task {
+func ClaimTimeLT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LT(s.C(FieldClaimTime), v))
@@ -349,7 +347,7 @@ func ClaimTimeLT(v time.Time) predicate.Task {
 }
 
 // ClaimTimeLTE applies the LTE predicate on the "ClaimTime" field.
-func ClaimTimeLTE(v time.Time) predicate.Task {
+func ClaimTimeLTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LTE(s.C(FieldClaimTime), v))
@@ -376,7 +374,7 @@ func ClaimTimeNotNil() predicate.Task {
 }
 
 // ExecStartTimeEQ applies the EQ predicate on the "ExecStartTime" field.
-func ExecStartTimeEQ(v time.Time) predicate.Task {
+func ExecStartTimeEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldExecStartTime), v))
@@ -385,7 +383,7 @@ func ExecStartTimeEQ(v time.Time) predicate.Task {
 }
 
 // ExecStartTimeNEQ applies the NEQ predicate on the "ExecStartTime" field.
-func ExecStartTimeNEQ(v time.Time) predicate.Task {
+func ExecStartTimeNEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.NEQ(s.C(FieldExecStartTime), v))
@@ -394,7 +392,7 @@ func ExecStartTimeNEQ(v time.Time) predicate.Task {
 }
 
 // ExecStartTimeIn applies the In predicate on the "ExecStartTime" field.
-func ExecStartTimeIn(vs ...time.Time) predicate.Task {
+func ExecStartTimeIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -413,7 +411,7 @@ func ExecStartTimeIn(vs ...time.Time) predicate.Task {
 }
 
 // ExecStartTimeNotIn applies the NotIn predicate on the "ExecStartTime" field.
-func ExecStartTimeNotIn(vs ...time.Time) predicate.Task {
+func ExecStartTimeNotIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -432,7 +430,7 @@ func ExecStartTimeNotIn(vs ...time.Time) predicate.Task {
 }
 
 // ExecStartTimeGT applies the GT predicate on the "ExecStartTime" field.
-func ExecStartTimeGT(v time.Time) predicate.Task {
+func ExecStartTimeGT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GT(s.C(FieldExecStartTime), v))
@@ -441,7 +439,7 @@ func ExecStartTimeGT(v time.Time) predicate.Task {
 }
 
 // ExecStartTimeGTE applies the GTE predicate on the "ExecStartTime" field.
-func ExecStartTimeGTE(v time.Time) predicate.Task {
+func ExecStartTimeGTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GTE(s.C(FieldExecStartTime), v))
@@ -450,7 +448,7 @@ func ExecStartTimeGTE(v time.Time) predicate.Task {
 }
 
 // ExecStartTimeLT applies the LT predicate on the "ExecStartTime" field.
-func ExecStartTimeLT(v time.Time) predicate.Task {
+func ExecStartTimeLT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LT(s.C(FieldExecStartTime), v))
@@ -459,7 +457,7 @@ func ExecStartTimeLT(v time.Time) predicate.Task {
 }
 
 // ExecStartTimeLTE applies the LTE predicate on the "ExecStartTime" field.
-func ExecStartTimeLTE(v time.Time) predicate.Task {
+func ExecStartTimeLTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LTE(s.C(FieldExecStartTime), v))
@@ -486,7 +484,7 @@ func ExecStartTimeNotNil() predicate.Task {
 }
 
 // ExecStopTimeEQ applies the EQ predicate on the "ExecStopTime" field.
-func ExecStopTimeEQ(v time.Time) predicate.Task {
+func ExecStopTimeEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.EQ(s.C(FieldExecStopTime), v))
@@ -495,7 +493,7 @@ func ExecStopTimeEQ(v time.Time) predicate.Task {
 }
 
 // ExecStopTimeNEQ applies the NEQ predicate on the "ExecStopTime" field.
-func ExecStopTimeNEQ(v time.Time) predicate.Task {
+func ExecStopTimeNEQ(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.NEQ(s.C(FieldExecStopTime), v))
@@ -504,7 +502,7 @@ func ExecStopTimeNEQ(v time.Time) predicate.Task {
 }
 
 // ExecStopTimeIn applies the In predicate on the "ExecStopTime" field.
-func ExecStopTimeIn(vs ...time.Time) predicate.Task {
+func ExecStopTimeIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -523,7 +521,7 @@ func ExecStopTimeIn(vs ...time.Time) predicate.Task {
 }
 
 // ExecStopTimeNotIn applies the NotIn predicate on the "ExecStopTime" field.
-func ExecStopTimeNotIn(vs ...time.Time) predicate.Task {
+func ExecStopTimeNotIn(vs ...int64) predicate.Task {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -542,7 +540,7 @@ func ExecStopTimeNotIn(vs ...time.Time) predicate.Task {
 }
 
 // ExecStopTimeGT applies the GT predicate on the "ExecStopTime" field.
-func ExecStopTimeGT(v time.Time) predicate.Task {
+func ExecStopTimeGT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GT(s.C(FieldExecStopTime), v))
@@ -551,7 +549,7 @@ func ExecStopTimeGT(v time.Time) predicate.Task {
 }
 
 // ExecStopTimeGTE applies the GTE predicate on the "ExecStopTime" field.
-func ExecStopTimeGTE(v time.Time) predicate.Task {
+func ExecStopTimeGTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.GTE(s.C(FieldExecStopTime), v))
@@ -560,7 +558,7 @@ func ExecStopTimeGTE(v time.Time) predicate.Task {
 }
 
 // ExecStopTimeLT applies the LT predicate on the "ExecStopTime" field.
-func ExecStopTimeLT(v time.Time) predicate.Task {
+func ExecStopTimeLT(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LT(s.C(FieldExecStopTime), v))
@@ -569,7 +567,7 @@ func ExecStopTimeLT(v time.Time) predicate.Task {
 }
 
 // ExecStopTimeLTE applies the LTE predicate on the "ExecStopTime" field.
-func ExecStopTimeLTE(v time.Time) predicate.Task {
+func ExecStopTimeLTE(v int64) predicate.Task {
 	return predicate.Task(
 		func(s *sql.Selector) {
 			s.Where(sql.LTE(s.C(FieldExecStopTime), v))
