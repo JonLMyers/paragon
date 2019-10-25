@@ -7,6 +7,12 @@ import (
 	"sort"
 )
 
+func (srv *Server) ServeUI(w http.ResponseWriter, req *http.Request) {
+
+	w.Write([]byte(teamserverHTML))
+	return
+}
+
 func (srv *Server) handleMakeTask(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		decoder := json.NewDecoder(r.Body)

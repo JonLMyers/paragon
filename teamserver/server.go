@@ -58,6 +58,7 @@ func (srv *Server) handleStatus(w http.ResponseWriter, r *http.Request) {
 func (srv *Server) Run() {
 	router := http.NewServeMux()
 	router.HandleFunc("/status", srv.handleStatus)
+	router.HandleFunc("/ui", srv.ServeUI)
 
 	router.HandleFunc("/events/agent/checkin", srv.handleAgentCheckin)
 	router.HandleFunc("/events/tasks/claimed", srv.handleTaskClaimed)
